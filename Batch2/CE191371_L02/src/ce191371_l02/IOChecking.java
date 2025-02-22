@@ -182,7 +182,7 @@ public class IOChecking {
         try {
             
             // Check if the name is only contain character and space or not.
-            if (!input.matches("[0-9a-zA-Z ]+")) {
+            if (!input.matches("[a-zA-Z ]+")) {
                 
                 // If there are special character then throw an exception.
                 throw new Exception(msg);

@@ -180,11 +180,11 @@ public class Program {
             System.out.println("There are no student in the list currently.");
             return;
         }
-        
+
         getName();
 
         // Get the list that contain all the student match with the name input.
-        HashMap<String, ArrayList<Semester>> nameList  = findByName(name);
+        HashMap<String, ArrayList<Semester>> nameList = findByName(name);
 
         // Check if the list is empty.
         if (nameList.isEmpty()) {
@@ -195,34 +195,40 @@ public class Program {
             printListName(nameList);
         }
     }
-    
+
     public void printListName(HashMap<String, ArrayList<Semester>> nameList) {
-        
-        System.out.println("+-----+--------+--------+------------------+--------------+---------------------+");
-        System.out.println("| No. |Semester| ID     | Student name     | Course       | Total of course     |");
-        System.out.println("+-----+--------+--------+------------------+--------------+---------------------+");
+
+        System.out.println("+-----+--------+----------+-----------------------+--------------+");
+        System.out.println("| No. | ID     | Semester | Student name          | Course       |");
+        System.out.println("+-----+--------+----------+-----------------------+--------------+");
 
         int count = 1;
 
         // Get each student from the list.
-        for (Map.Entry<String, HashMap<String, Semester>> semesterData : nameList.entrySet()) {
-            for (Map.Entry<String, HashMap<String, Student>> semesterData : list.entrySet()) {
+        for (Map.Entry<String, ArrayList<Semester>> studentData : nameList.entrySet()) {
 
-            for (Map.Entry<String, Student> studentData : semesterData.getValue().entrySet()) {
-                System.out.printf("| %3d |%-8s", count, semesterData.getKey());
+            for (int i = 0; i < studentData.getValue().size(); i++) {
 
-                // Get each course of that student from the list.
-                for (String courseInfo : studentData.getValue().getCourseInSemester()) {
+                for (String courseName : studentData.getValue().get(i).getStudent().getCourseInSemester()) {
+
+                    // Get each course of that student from the list.
+                    id = studentData.getKey();
+                    semester = studentData.getValue().get(i).getSemesterName();
+                    name = studentData.getValue().get(i).getStudent().getName();
+                    if (name.length() >= 23) {
+                        name = studentData.getValue().get(i).getStudent().getName().substring(0, 19) + "...";
+                    }
+                    course = courseName;
 
                     // Print out all the information.
-                    System.out.printf(" %6s | %16s | %-12s | %19d |\n", studentData.getValue().getId(), studentData.getValue().getName(), courseInfo, 1);
-                    count++;
+                    System.out.printf("| %3d |%-8s| %-9s| %-22s| %-12s |\n", count, id, semester, name, course);
                 }
+
             }
 
         }
 
-        System.out.println("+-----+--------+--------+------------------+--------------+---------------------+");
+        System.out.println("+-----+--------+----------+-----------------------+--------------+");
     }
 
     /**
@@ -303,9 +309,9 @@ public class Program {
             System.out.println("There are no student in the list currently.");
             return;
         }
-//
-//        // Print the student data.
-//        print(studentList);
+
+        // Print the student data.
+        print();
     }
 
     /**
@@ -331,35 +337,6 @@ public class Program {
 
     public void addStudentInfomation() {
 
-        // id -> arraylist<hashmap<semester, student (id, name, arraylist<course>)>>
-        // id -> semester -> student -> java (?)
-        //                              .net (?)
-        //                              C/C++ (?)
-        //       semester -> student -> java (?)
-        //                              .net (?)
-        //                              C/C++ (?)
-        //       semester -> student -> java (?)
-        //                              .net (?)
-        //                              C/C++ (?)
-        // id -> semester -> student -> java (?)
-        //                              .net (?)
-        //                              C/C++ (?)
-        //       semester -> student -> java (?)
-        //                              .net (?)
-        //                              C/C++ (?)
-        //       semester -> student -> java (?)
-        //                              .net (?)
-        //                              C/C++ (?)
-        // id -> semester -> student -> java (?)
-        //                              .net (?)
-        //                              C/C++ (?)
-        //       semester -> student -> java (?)
-        //                              .net (?)
-        //                              C/C++ (?)
-        //       semester -> student -> java (?)
-        //                              .net (?)
-        //                              C/C++ (?)
-        // Check if the list exist the student with the id or not.
         if (!studentList.containsKey(id)) {
 
             courseList = new ArrayList<>();
@@ -458,7 +435,7 @@ public class Program {
      *
      * @return the list contain all the course.
      */
-    public HashMap<String, Integer> addCourse(HashMap<String, Integer> courses, String course) {
+    public HashMap<String, Integer> countCourse(HashMap<String, Integer> courses, String course) {
 
         // Check if the course is already in the list or not.
         if (courses.containsKey(course)) {
@@ -489,14 +466,14 @@ public class Program {
 
         // Get each student from the list.
         for (Map.Entry<String, ArrayList<Semester>> list : studentList.entrySet()) {
-            
+
             semesterList = list.getValue();
-            
+
             for (Semester semester1 : semesterList) {
-                
+
                 // Check if the student is match with the name need to find or not.
                 if (semester1.getStudent().getName().toLowerCase().contains(name.toLowerCase())) {
-                    
+
                     // If yes then add it to the temp list.
                     nameList.put(list.getKey(), list.getValue());
                 }
@@ -508,6 +485,7 @@ public class Program {
         return nameList;
 
     }
+
     /**
      * Method to search student by id.
      *
@@ -532,34 +510,45 @@ public class Program {
 
     /**
      * Method to print out the student with a input list.
-     *
-     * @param list is the list of all student need to print out.
      */
-    public void print(HashMap<String, HashMap<String, Student>> list) {
-        System.out.println("+-----+--------+--------+------------------+--------------+---------------------+");
-        System.out.println("| No. |Semester| ID     | Student name     | Course       | Total of course     |");
-        System.out.println("+-----+--------+--------+------------------+--------------+---------------------+");
+    public void print() {
+
+        System.out.println("+-----+--------+-----------------------+--------------+-----------------+");
+        System.out.println("| No. | ID     | Student name          | Course       | Total of course |");
+        System.out.println("+-----+--------+-----------------------+--------------+-----------------+");
 
         int count = 1;
+        HashMap<String, Integer> temp = new HashMap<>();
 
-        // Get each student from the list.
-        for (Map.Entry<String, HashMap<String, Student>> semesterData : list.entrySet()) {
+        // Get each student from the list.d
+        for (Map.Entry<String, ArrayList<Semester>> semesterData : studentList.entrySet()) {
 
-            for (Map.Entry<String, Student> studentData : semesterData.getValue().entrySet()) {
-                System.out.printf("| %3d |%-8s", count, semesterData.getKey());
+            for (int i = 0; i < semesterData.getValue().size(); i++) {
 
-                // Get each course of that student from the list.
-                for (String courseInfo : studentData.getValue().getCourseInSemester()) {
+                for (String courseName : semesterData.getValue().get(i).getStudent().getCourseInSemester()) {
 
-                    // Print out all the information.
-                    System.out.printf(" %6s | %16s | %-12s | %19d |\n", studentData.getValue().getId(), studentData.getValue().getName(), courseInfo, 1);
-                    count++;
+                    // Get each course of that student from the list.
+                    id = semesterData.getKey();
+                    name = semesterData.getValue().get(i).getStudent().getName();
+                    if (name.length() >= 23) {
+                        name = semesterData.getValue().get(i).getStudent().getName().substring(0, 19) + "...";
+                    }
+                    course = courseName;
+
+                    temp = countCourse(temp, course);
+
                 }
             }
 
+            for (Map.Entry<String, Integer> courseList : temp.entrySet()) {
+
+                // Print out all the information.
+                System.out.printf("| %3d |%-8s| %-22s| %-12s | %-16s|\n", count, id, name, courseList.getKey(), courseList.getValue());
+
+            }
         }
 
-        System.out.println("+-----+--------+--------+------------------+--------------+---------------------+");
+        System.out.println("+-----+--------+-----------------------+--------------+-----------------+");
 
     }
 
@@ -833,9 +822,11 @@ public class Program {
         }
     }
 
-    public boolean checkFullCourse(String course) {
+    public boolean checkFullCourse(String semester) {
+        
+        pos = -1;
 
-        if (studentList.isEmpty()) {
+        if (studentList.isEmpty() || !studentList.containsKey(id)) {
             return false;
         }
 
@@ -846,10 +837,16 @@ public class Program {
             semesterTemp = semesterList.get(i);
 
             if (semesterTemp.getSemesterName().equals(semester)) {
+                pos = i;
+                System.out.println(pos);
                 break;
             }
         }
-
+        
+        if (pos == -1) {
+            return false;
+        }
+        
         return semesterTemp.getStudent().getCourseInSemester().size() == 3;
     }
 
@@ -870,17 +867,22 @@ public class Program {
             } else if (!check.equals("java") && !check.equals(".net") && !check.equals("c/c++")) {
                 System.out.println("Not a valid course (only Java or .Net or C/C++");
 
-            } else if (studentList.isEmpty()) {
-                course = check;
-                break;
-
                 // If the course is valid then break the loop.
             } else {
 
+                course = check;
+
+                if (studentList.isEmpty() || !studentList.containsKey(id)) {
+                    break;
+                }
+                
+                if (pos == -1) {
+                    return;
+                }
+                
                 courseList = studentList.get(id).get(pos).getStudent().getCourseInSemester();
 
                 if (!courseList.contains(check)) {
-                    course = check;
                     break;
                 }
 
@@ -891,7 +893,9 @@ public class Program {
 
     public void checkExistCourse(String semester) {
 
-        if (studentList.isEmpty()) {
+        pos = -1;
+
+        if (studentList.isEmpty() || !studentList.containsKey(id)) {
             return;
         }
 
@@ -902,20 +906,22 @@ public class Program {
             semesterTemp = semesterList.get(i);
 
             if (semesterTemp.getSemesterName().equals(semester)) {
-
                 pos = i;
                 break;
             }
 
         }
 
-        courseList = semesterTemp.getStudent().getCourseInSemester();
-
-        if (courseList.isEmpty()) {
-
-            System.out.println("Adding course: " + course + " for the student: " + id + " successfully.");
+        if (pos == -1) {
+            return;
         }
-
+        
+        courseList = semesterList.get(pos).getStudent().getCourseInSemester();
+        
+        if (courseList.isEmpty()) {
+            return;
+        }
+        
         if (courseList.size() == 2) {
 
             if (!courseList.contains("java")) {
@@ -942,7 +948,7 @@ public class Program {
 
             } else if (courseList.contains(".net")) {
 
-                System.out.println("This semester only have .Net left. Enter (Java or C/C++) to continue.");
+                System.out.println("This semester only have .Net. Enter (Java or C/C++) to continue.");
             }
         }
     }
