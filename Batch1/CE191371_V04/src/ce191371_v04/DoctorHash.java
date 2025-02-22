@@ -502,9 +502,13 @@ public class DoctorHash {
 
             // Get the value of the doctor.
             Doctor curr = doc.getValue();
+            
+            if (curr.getName().length() >= 21) {
+                name = curr.getName().substring(0, 18) + "...";
+            }
 
             // Print out the information of the doctor.
-            System.out.printf("%-10s%-21s%-25s%-12s\n", curr.getId(), (curr.getName().substring(0, 18) + "..."), curr.getSpecialization(), curr.getAvailability());
+            System.out.printf("%-10s%-21s%-25s%-12s\n", curr.getId(), name, curr.getSpecialization(), curr.getAvailability());
         }
     }
 }
