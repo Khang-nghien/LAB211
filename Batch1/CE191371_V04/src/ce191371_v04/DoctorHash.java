@@ -241,7 +241,7 @@ public class DoctorHash {
             if (!doctor.getId().matches("^(DOC|doc).+")) {
 
                 // If the doctor id is not valid then throw an exception with a message.
-                throw new Exception("The id of the doctor must begin with DOC*");
+                throw new Exception("The code of the doctor must begin with DOC*");
             }
 
             // Check if the doctor is existed in the list or not.
@@ -249,6 +249,11 @@ public class DoctorHash {
 
                 // If it existed then throw an exception with a message.
                 throw new Exception("Doctor code " + doctor.getId() + " is duplicate.");
+            }
+            
+            // Check if the name is not valid.
+            if (checker.checkName(name, "Please enter an valid name.")) {
+                throw new Exception("");
             }
 
             // Check if the availability of the doctor is contain any character .
@@ -326,12 +331,17 @@ public class DoctorHash {
             if (!doctor.getId().matches("^DOC.$")) {
 
                 // If the doctor id is not valid then throw an exception with a message.
-                throw new Exception("The id of the doctor must begin with DOC*");
+                throw new Exception("The code of the doctor must begin with DOC*");
             }
 
-            // Check if the id of the doctor 
+            // Check if the id of the doctor.
             if (!doctorList.containsKey(id)) {
                 throw new Exception("Doctor code doesn’t exist.");
+            }
+            
+            // Check if the name is not valid.
+            if (checker.checkName(name, "Please enter an valid name.")) {
+                throw new Exception("");
             }
 
             // Check if the availability of the doctor is contain any character .
@@ -390,7 +400,7 @@ public class DoctorHash {
             if (!doctor.getId().matches("^DOC.$")) {
 
                 // If the doctor id is not valid then throw an exception with a message.
-                throw new Exception("The id of the doctor must begin with DOC*");
+                throw new Exception("The code of the doctor must begin with DOC*");
             }
 
             // Check if the id of the doctor exisited in the list or not.
@@ -494,7 +504,7 @@ public class DoctorHash {
             Doctor curr = doc.getValue();
 
             // Print out the information of the doctor.
-            System.out.printf("%-10s%-21s%-25s%-12s\n", curr.getId(), curr.getName(), curr.getSpecialization(), curr.getAvailability());
+            System.out.printf("%-10s%-21s%-25s%-12s\n", curr.getId(), (curr.getName().substring(0, 18) + "..."), curr.getSpecialization(), curr.getAvailability());
         }
     }
 }

@@ -97,4 +97,35 @@ public class IOChecking {
         return (Integer.parseInt(number) < begin || Integer.parseInt(number) > end);
     }
     
+    /**
+     * Checking if the name is valid or not.
+     * 
+     * @param input is the unchecked name.
+     * @param msg is the error message.
+     * 
+     * @return true if the name is not valid. False if valid.
+     */
+    public boolean checkName(String input, String msg) {
+        
+        try {
+            
+            // Check if the name is only contain character and space or not.
+            if (!input.matches("[0-9a-zA-Z ]+")) {
+                
+                // If there are special character then throw an exception.
+                throw new Exception(msg);
+            }
+            
+            // Return false if the name is valid.
+            return false;
+        } catch (Exception e) {
+            
+            // Print out the error.
+            System.out.println(e.getMessage());
+
+            // Return true if the name is not valid.
+            return true;
+        }
+    }
+    
 }
