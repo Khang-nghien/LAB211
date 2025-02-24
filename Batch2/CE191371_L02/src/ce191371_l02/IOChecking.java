@@ -212,7 +212,7 @@ public class IOChecking {
         try {
             
             // Check if the id is right format or not (SV****).
-            if (!input.matches("^SV(\\d\\d\\d\\d)$")) {
+            if (!input.matches("^(SV)(\\d\\d\\d\\d)$")) {
                 
                 // If not then throw an exception with an message.
                 throw new Exception(msg);

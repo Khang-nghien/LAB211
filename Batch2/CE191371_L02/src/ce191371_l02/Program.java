@@ -130,7 +130,7 @@ public class Program {
     public void menu() {
         System.out.println("\tWELCOME TO STUDENT MANAGEMENT");
         System.out.println("1. Create");
-        System.out.println("2. Find and Sort");
+        System.out.println("2. Find");
         System.out.println("3. Update/Delete");
         System.out.println("4. Report");
         System.out.println("5. Exit");
@@ -327,10 +327,10 @@ public class Program {
 
         // Check if the id is existing in the list or not.
         if (studentList.containsKey(id)) {
-            System.out.println("Student: " + id + " existed in the database");
-            System.out.println("Starting to insert information about the student.");
+            System.out.println("Student: " + id + " existed in the database.");
+            System.out.println("Starting to insert more information about the student.");
         } else {
-            System.out.println("Student: " + id + " did not exist in the database");
+            System.out.println("Student: " + id + " did not exist in the database.");
             System.out.println("Starting to insert new data.\n");
         }
 
@@ -394,6 +394,9 @@ public class Program {
                 // Add the course to a new courseList.
                 courseList = new ArrayList<>();
                 courseList.add(course);
+                
+                // Get the student name.
+                name = semesterList.get(0).getStudent().getName();
 
                 // Add the courseList to new student.
                 studentTemp = new Student(id, name, courseList);
@@ -432,8 +435,16 @@ public class Program {
                 // Get the courseList from semester match with the input from user.
                 courseList = semesterTemp.getStudent().getCourseInSemester();
 
+                // If the courseList contain empty then remove it.
+                if (courseList.get(0).equals("empty")) {
+                    courseList.remove(0);
+                }
+
                 // Adding new course to the courseList.
                 courseList.add(course);
+                
+                // Get the student name.
+                name = semesterList.get(0).getStudent().getName();
 
                 // Update the student information.
                 studentTemp = new Student(id, name, courseList);
@@ -494,17 +505,19 @@ public class Program {
      * @return the list contain all the course.
      */
     public HashMap<String, Integer> countCourse(HashMap<String, Integer> courses, String course) {
-        
-        if (course.equals("empty")) {
+
+        // If the name of the course is empty then add it to the courseList and set value it to 0.
+        if (courses.containsKey("empty")) {
+            courses.clear();
             courses.put(course, 0);
             return courses;
         }
-
+        
         // Check if the course is already in the list or not.
         if (courses.containsKey(course)) {
 
             // If yes then add the number of it to 1.
-            courses.put(course, (courses.get(course) + 1));
+            courses.replace(course, (courses.get(course) + 1));
 
             // If not then set the number of it to 1.
         } else {
@@ -610,6 +623,7 @@ public class Program {
 
         // Get each student from the list.d
         for (Map.Entry<String, ArrayList<Semester>> semesterData : studentList.entrySet()) {
+            temp.clear();
 
             for (int i = 0; i < semesterData.getValue().size(); i++) {
 
@@ -619,20 +633,19 @@ public class Program {
                     id = semesterData.getKey();
                     name = semesterData.getValue().get(i).getStudent().getName();
                     if (name.length() >= 23) {
-                        name = semesterData.getValue().get(i).getStudent().getName().substring(0, 19) + "...";
+                        name = semesterData.getValue().get(i).getStudent().getName().substring(0, 20) + "...";
                     }
-                    
+
                     course = courseName;
 
                     temp = countCourse(temp, course);
-
                 }
             }
 
-            for (Map.Entry<String, Integer> courseList : temp.entrySet()) {
+            for (Map.Entry<String, Integer> list : temp.entrySet()) {
 
                 // Print out all the information.
-                System.out.printf("| %3d |%-8s| %-22s| %-12s | %-16s|\n", count, id, name, courseList.getKey(), courseList.getValue());
+                System.out.printf("| %3d |%-8s| %-22s| %-12s | %-16s|\n", count, id, name, list.getKey(), list.getValue());
                 count++;
 
             }
@@ -1088,9 +1101,9 @@ public class Program {
     }
 
     public void removeCourse() {
-        
+
         semesterList = studentList.get(id);
-        
+
         while (true) {
 
             pos = -1;
@@ -1108,7 +1121,7 @@ public class Program {
                 // If the user enter valid semester then break the loop.
             } else {
 
-                for (int i = 0 ; i < semesterList.size() ; i++) {
+                for (int i = 0; i < semesterList.size(); i++) {
 
                     if (semesterList.get(i).getSemesterName().equals(check)) {
                         pos = i;
@@ -1153,17 +1166,78 @@ public class Program {
                         studentList.replace(id, semesterList);
                         System.out.println("Successfully remove course: " + course + " from the " + semester + " semester.\n");
                     } else {
-                        
+
                         System.out.println("Failed to remove course: " + course + " from the " + semester + " semester.\n");
                     }
                     break;
                 }
             }
 
-            return;
+        } else {
+
+            while (true) {
+
+                // Get the course from user.
+                System.out.print("Enter student course (Java or .Net or C/C++): ");
+                check = input.nextLine().trim().toLowerCase();
+
+                // Check if it null.
+                if (checker.checkNullValue(check, "Please enter something.")) {
+
+                    // Check if the course is a valid course or not.
+                } else if (!check.equals("java") && !check.equals(".net") && !check.equals("c/c++")) {
+                    System.out.println("Not a valid course (only Java or .Net or C/C++).");
+
+                    // If the course is valid then break the loop.
+                } else {
+
+                    course = check;
+
+                    courseList = studentList.get(id).get(pos).getStudent().getCourseInSemester();
+
+                    if (courseList.contains(check)) {
+                        break;
+                    }
+
+                    System.out.println("Please enter valid course.");
+                }
+            }
+
+            while (true) {
+
+                // Get choice from user.
+                System.out.print("Enter your choice (Y-yes N-no): ");
+                check = input.nextLine().trim().toUpperCase();
+
+                // Check if it null.
+                if (checker.checkNullValue(check, "Please enter something.")) {
+
+                    // Check if user dont enter valid choice.
+                } else if (!check.equals("Y") && !check.equals("N")) {
+                    System.out.println("Please only enter valid choice (Y-yes N-no).");
+
+                    // If user enter valid choice then break the loop.
+                } else {
+
+                    semester = semesterList.get(pos).getSemesterName();
+                    course = semesterList.get(pos).getStudent().getCourseInSemester().get(0);
+
+                    if (check.equals("Y")) {
+
+                        semesterList.get(pos).getStudent().getCourseInSemester().remove(course);
+                        studentList.replace(id, semesterList);
+                        System.out.println("Successfully remove course: " + course + " from the " + semester + " semester.\n");
+                    } else {
+
+                        System.out.println("Failed to remove course: " + course + " from the " + semester + " semester.\n");
+                    }
+                    break;
+                }
+            }
         }
-        
+
     }
+
     public void removeSemester() {
 
         semesterList = studentList.get(id);
@@ -1190,7 +1264,7 @@ public class Program {
                     semester = semesterList.get(0).getSemesterName();
 
                     if (check.equals("Y")) {
-                        
+
 //                        name = semesterList.get(0).getStudent().getName();
 //                        semesterList.remove(0);
 //                        courseList = new ArrayList<>();
@@ -1200,10 +1274,10 @@ public class Program {
 //                        semesterList.remove(0);
 //                        studentList.replace(id, semesterList);
 //                        System.out.println(studentList.size());
-                          studentList.remove(id);
+                        studentList.remove(id);
                         System.out.println("Successfully remove " + semester + " from student with Id: " + id + ".\n");
                     } else {
-                        
+
                         System.out.println("Failed to remove " + semester + " from student with Id: " + id + ".\n");
                     }
                     break;
@@ -1256,7 +1330,7 @@ public class Program {
                 break;
             }
         }
-        
+
         System.out.println("Successfully remove " + semester + " from student with Id: " + id + ".\n");
     }
 
@@ -1368,7 +1442,7 @@ public class Program {
         while (true) {
 
             // Get the course from user.
-            System.out.print("Enter student course: ");
+            System.out.print("Enter student course (Java or .Net or C/C++): ");
             check = input.nextLine().trim().toLowerCase();
 
             // Check if it null.
@@ -1376,7 +1450,7 @@ public class Program {
 
                 // Check if the course is a valid course or not.
             } else if (!check.equals("java") && !check.equals(".net") && !check.equals("c/c++")) {
-                System.out.println("Not a valid course (only Java or .Net or C/C++.");
+                System.out.println("Not a valid course (only Java or .Net or C/C++).");
 
                 // If the course is valid then break the loop.
             } else {
@@ -1404,7 +1478,7 @@ public class Program {
 
     /**
      * Method to check the exist of the course in a semester.
-     * 
+     *
      * @param semester is the semester that contain the course.
      */
     public void checkExistCourse(String semester) {
@@ -1418,7 +1492,7 @@ public class Program {
 
         // Get the semesterList of the student with id input.
         semesterList = studentList.get(id);
-        
+
         // Run from the first semester to the last semester.
         for (int i = 0; i < semesterList.size(); i++) {
 
@@ -1438,14 +1512,16 @@ public class Program {
         if (pos == -1) {
             return;
         }
-        
-        //
+
+        // Get courseList from that semester.
         courseList = semesterList.get(pos).getStudent().getCourseInSemester();
 
+        // If the courseList is empty then return.
         if (courseList.isEmpty()) {
             return;
         }
 
+        // If the courseList exist 2 course.
         if (courseList.size() == 2) {
 
             if (!courseList.contains("java")) {
