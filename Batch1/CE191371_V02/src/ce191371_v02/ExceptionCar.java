@@ -189,7 +189,7 @@ public class ExceptionCar extends Exception {
             }
 
             // If the price contain special character.
-            if (!price.matches("[0-9]+")) {
+            if (!price.matches("^(-|)[0-9]+$")) {
                 throw new Exception("Price is digit");
             }
 

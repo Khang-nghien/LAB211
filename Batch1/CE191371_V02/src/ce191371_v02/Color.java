@@ -17,7 +17,7 @@ public enum Color {
     // All color of each type car.
     AUDI(new String[]{"WHITE", "ORANGE", "YELLOW", "NO COLOR"}),
     MERCEDES(new String[]{"GREEN", "BLUE", "PURPLE", "NO COLOR"}),
-    BWM(new String[]{"PINK", "RED", "BROWN", "NO COLOR"});
+    BMW(new String[]{"PINK", "RED", "BROWN", "NO COLOR"});
     
     private String[] color;
     

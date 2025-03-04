@@ -17,7 +17,7 @@ public enum Car {
     // All type of car.
     AUDI,
     MERCEDES,
-    BWM;
+    BMW;
     
     private String type;
     

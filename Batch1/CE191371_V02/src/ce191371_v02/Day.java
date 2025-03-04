@@ -17,7 +17,7 @@ public enum Day {
     // All day sell for each type of car.
     AUDI(new String[]{"FRIDAY", "SUNDAY", "MONDAY"}),
     MERCEDES(new String[]{"TUESDAY", "SATURDAY", "PURPLE"}),
-    BWM(new String[]{"MONEY", "SUNDAY", "THURSDAY"});
+    BMW(new String[]{"MONDAY", "SUNDAY", "THURSDAY"});
     
     private String[] day;
     
